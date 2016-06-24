@@ -1,0 +1,88 @@
+{
+
+	"last_updated": "06-24-2015",
+
+	"LES": {
+		"avg_price": {
+			"1bd1ba": 1520,
+			"2bd2ba": 2321,
+			"3bd2ba": 1200
+		},
+		"num_listings": {
+			"all": 230,
+			"1bd1ba": 100,
+			"2bd2ba": 100,
+			"3bd2ba": 30
+		}
+	}, 
+
+	"UES": {
+		"avg_price": {
+			"1bd1ba": 1520,
+			"2bd2ba": 2321,
+			"3bd2ba": 1200
+		},
+		"num_listings": {
+			"all": 230,
+			"1bd1ba": 100,
+			"2bd2ba": 100,
+			"3bd2ba": 30
+		}
+	}, 
+
+	"UWS": {
+		"avg_price": {
+			"1bd1ba": 1520,
+			"2bd2ba": 2321,
+			"3bd2ba": 1200
+		},
+		"num_listings": {
+			"all": 230,
+			"1bd1ba": 100,
+			"2bd2ba": 100,
+			"3bd2ba": 30
+		}
+	}, 
+
+	"CHE": {
+		"avg_price": {
+			"1bd1ba": 1520,
+			"2bd2ba": 2321,
+			"3bd2ba": 1200
+		},
+		"num_listings": {
+			"all": 230,
+			"1bd1ba": 100,
+			"2bd2ba": 100,
+			"3bd2ba": 30
+		}
+	}, 
+
+	"HEK": {
+		"avg_price": {
+			"1bd1ba": 1520,
+			"2bd2ba": 2321,
+			"3bd2ba": 1200
+		},
+		"num_listings": {
+			"all": 230,
+			"1bd1ba": 100,
+			"2bd2ba": 100,
+			"3bd2ba": 30
+		}
+	}, 	
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+

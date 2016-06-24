@@ -1,0 +1,33 @@
+{
+  "name": "aptGrid",
+  "version": "1.0.0",
+  "description": "indexer / searcher for apartment listings produced by the crawler",
+  "main": "server.js",
+
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "keywords": [
+    "aptGrid",
+    "apartment",
+    "listings",
+    "search",
+    "search engine"
+  ],
+
+  "author": "Evan Feng",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.7.1",
+    "express": "~4.10.0",
+    "mongodb": "^1.4.40",
+    "path": "^0.12.7"
+  },
+
+  "devDependencies": {
+    "nodemon": "^1.9.2"
+  }
+
+}
+

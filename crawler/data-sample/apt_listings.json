@@ -1,0 +1,93 @@
+[
+
+	{
+		"title": "Example Listing 1",
+		"lat": 111.111,
+		"lng": 111.111,
+		"neighborhood": "LES",
+		"date": "06-24-2016",
+		"description": "an example apartment listing (Lower East Side)",
+		"contact_email": "contact@example.com",
+		"contact_phone": "111-111-1111",
+		"price": 4500,
+		"bedrooms": 3,
+		"bathrooms": 2,
+		"has_livingroom": true,
+		"has_kitchen": true,
+		"allows_pets": false,
+		"score": 9.3 
+	},
+
+	{
+		"title": "Example Listing 2",
+		"lat": 222.222,
+		"lng": 222.222,
+		"neighborhood": "UES",
+		"date": "06-25-2016",
+		"description": "an example apartment listing (Upper East Side)",
+		"contact_email": "contact@example.com",
+		"contact_phone": "111-111-1111",
+		"price": 4500,
+		"bedrooms": 3,
+		"bathrooms": 2,
+		"has_livingroom": true,
+		"has_kitchen": true,
+		"allows_pets": false,
+		"score": 6.2 
+	},
+	{
+		"title": "Example Listing 3",
+		"lat": 111.111,
+		"lng": 111.111,
+		"neighborhood": "UWS",
+		"date": "06-22-2016",
+		"description": "an example apartment listing (Upper West Side)",
+		"contact_email": "contact@example.com",
+		"contact_phone": "111-111-1111",
+		"price": 4500,
+		"bedrooms": 3,
+		"bathrooms": 2,
+		"has_livingroom": true,
+		"has_kitchen": true,
+		"allows_pets": false,
+		"score": 5.5 
+	},
+	{
+		"title": "Example Listing 4",
+		"lat": 111.111,
+		"lng": 111.111,
+		"neighborhood": "HEK",
+		"date": "06-24-2016",
+		"description": "an example apartment listing (Hell's Kitchen)",
+		"contact_email": "contact@example.com",
+		"contact_phone": "111-111-1111",
+		"price": 4500,
+		"bedrooms": 3,
+		"bathrooms": 2,
+		"has_livingroom": true,
+		"has_kitchen": true,
+		"allows_pets": false,
+		"score": 3.3 
+	},
+	{
+		"title": "Example Listing 5",
+		"lat": 111.111,
+		"lng": 111.111,
+		"neighborhood": "CHE",
+		"date": "06-21-2016",
+		"description": "an example apartment listing (Chelsea)",
+		"contact_email": "contact@example.com",
+		"contact_phone": "111-111-1111",
+		"price": 1500,
+		"bedrooms": 1,
+		"bathrooms": 1,
+		"has_livingroom": false,
+		"has_kitchen": true,
+		"allows_pets": true,
+		"score": 7.3 
+	}
+
+
+
+]
+
