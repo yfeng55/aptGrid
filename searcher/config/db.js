@@ -4,6 +4,6 @@ module.exports = {
 	url : 'mongodb://localhost:27017/aptgrid',
 
 	// remote DB:
-	// remoteurl : 'mongodb://efeng:[password]@[mlab_url]/[dbname]'
+	// remoteurl : 'mongodb://[user]:[password]@[mlab_url]/[dbname]'
 
 }

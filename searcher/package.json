@@ -16,7 +16,7 @@
     "search engine"
   ],
 
-  "author": "Evan Feng",
+  "author": "Omer Solmazer, Vignesh Kamath, Yijie Feng",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.7.1",
