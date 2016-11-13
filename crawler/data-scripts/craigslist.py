@@ -5,6 +5,30 @@ import time
 import os.path
 import urllib2
 from bs4 import BeautifulSoup
+import pymongo
+from pymongo import MongoClient
+
+
+# ds023654.mlab.com:23654/apartmentdb
+def get_db():
+	connection = MongoClient('ds023654.mlab.com', 23654)
+	db = connection['apartmentdb']
+	db.authenticate('admin', 'craigslistsucks')
+
+	return db
+
+db = get_db()
+
+
+# >>> from pymongo import MongoClient
+# >>> client = pymongo.MongoClient('example.com')
+# >>> client.the_database.authenticate('user', 'password')
+# True
+# >>>
+# >>> uri = "mongodb://user:password@example.com/the_database"
+# >>> client = pymongo.MongoClient(uri)
+# >>>
+
 
 request_headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -39,10 +63,28 @@ for min_rent in range(1000,2000,500):
 			content = BeautifulSoup(content, "html.parser")
 
 			# declare data fields
-			title = content.find("span", {"id":"titletextonly"}).text
-			neighborhood = content.find("span", {"class": "postingtitletext"}).find("small").text
-			available_date = content.find("span", {"class":"property_date"})['data-date']
-			price = content.find("span", {"class":"price"}).text;
+
+			try:
+				title = content.find("span", {"id":"titletextonly"}).text
+			except AttributeError:
+				title = "None"
+
+			try:
+				neighborhood = content.find("span", {"class": "postingtitletext"}).find("small").text
+			except AttributeError:
+				neighborhood = "None"
+
+			try:
+				available_date = content.find("span", {"class":"property_date"})['data-date']
+			except AttributeError:
+				available_date = "None"
+
+			try:
+				price = content.find("span", {"class":"price"}).text;
+			except AttributeError:
+				price = "None"		
+
+
 			num_beds = None;
 			num_baths = None;
 			square_ft = None;
@@ -84,8 +126,9 @@ for min_rent in range(1000,2000,500):
 			output['listed_by'] = listed_by
 			output['price'] = price
 
-
 			print json.dumps(output);
+			db.listings.insert(output);
+
 			time.sleep(1)
 
 					
