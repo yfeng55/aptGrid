@@ -5,6 +5,8 @@ import time
 import os.path
 import urllib2
 from bs4 import BeautifulSoup
+import pymongo
+from pymongo import MongoClient
 
 request_headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 page_limit = 10
@@ -19,6 +21,16 @@ beds_baths_finder = {"style":"font-weight: bold; color: #444444;"}
 price_finder = {"style":"font-size: 1.45em; color: #005826; text-align: right;"}
 description_finder = {"style":"font-size: 0.90em; line-height: 140%;"}
 photo_finder = {"class":"fotorama"}
+available_date_finder = {"style":"font-size: 0.95em; color: #666666; padding-left: 10px; border-left: 1px solid #eeeeee;"}
+
+def get_db():
+	connection = MongoClient('ds023654.mlab.com', 23654)
+	db = connection['apartmentdb']
+	db.authenticate('admin', 'craigslistsucks')
+
+	return db
+
+db = get_db()
 
 # Create the new listing from the current page and print its json format
 def create_new_listing(page):
@@ -36,13 +48,13 @@ def create_new_listing(page):
 	num_baths = beds_baths[1].text.strip()
 
 	price = current_page.find("div",price_finder).text.strip()
-
 	description = current_page.find("div",description_finder).text.strip()
+	available_date = current_page.find("td", available_date_finder).text.strip()
 
 	listing = {}
 	listing['title'] = title
 	listing['neighborhood'] = neighborhood
-	listing['available_date'] = ""
+	listing['available_date'] = available_date
 	listing['num_beds'] = num_beds
 	listing['num_baths'] = num_baths
 	listing['square_ft'] = 0
@@ -55,6 +67,7 @@ def create_new_listing(page):
 	time.sleep(1)
 
 	print json.dumps(listing)
+	# db.listings.insert(listing)
 
 # Get page_limit number of pages from renthop and pass them on to get parsed
 
