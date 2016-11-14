@@ -4,12 +4,15 @@ import csv
 import time
 import os.path
 import urllib2
+import re
 from bs4 import BeautifulSoup
 import pymongo
 from pymongo import MongoClient
+from selenium import webdriver
 
 request_headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 page_limit = 10
+driver = webdriver.Chrome()
 
 # Static strings for finding values in the html tags
 
@@ -22,6 +25,7 @@ price_finder = {"style":"font-size: 1.45em; color: #005826; text-align: right;"}
 description_finder = {"style":"font-size: 0.90em; line-height: 140%;"}
 photo_finder = {"class":"fotorama"}
 available_date_finder = {"style":"font-size: 0.95em; color: #666666; padding-left: 10px; border-left: 1px solid #eeeeee;"}
+lat_long_finder = {"title":"Click to see this area on Google Maps"}
 
 def get_db():
 	connection = MongoClient('ds023654.mlab.com', 23654)
@@ -33,7 +37,7 @@ def get_db():
 db = get_db()
 
 # Create the new listing from the current page and print its json format
-def create_new_listing(page):
+def create_new_listing(current_page):
 	all_photos = current_page.findAll("div", photo_finder)[0].children
 	photos_count = 0
 	for photo in all_photos:
@@ -50,6 +54,11 @@ def create_new_listing(page):
 	price = current_page.find("div",price_finder).text.strip()
 	description = current_page.find("div",description_finder).text.strip()
 	available_date = current_page.find("td", available_date_finder).text.strip()
+	lat_long = current_page.find("a",lat_long_finder)['href']
+	
+	parsed = re.search('(.*)ll=(.*)z=(.*)',lat_long)
+	latitude = str(parsed.group(2)[:len(parsed.group(2))-2].split(',')[0])
+	longitude = str(parsed.group(2)[:len(parsed.group(2))-2].split(',')[1])
 
 	listing = {}
 	listing['title'] = title
@@ -63,8 +72,9 @@ def create_new_listing(page):
 	listing['num_photos'] = photos_count
 	listing['listed_by'] = contact_name
 	listing['link'] = link['href'].strip()
+	listing['latitude'] = latitude
+	listing['longitude'] = longitude
 	
-	time.sleep(1)
 
 	print json.dumps(listing)
 	# db.listings.insert(listing)
@@ -76,7 +86,12 @@ for i in range(0, page_limit):
 	response = urllib2.urlopen(request)
 	content = BeautifulSoup(response.read(), "html.parser")
 	for link in content.findAll("a", link_finder):
-		request = urllib2.Request(link['href'], headers=request_headers)
-		current_page = BeautifulSoup(urllib2.urlopen(request).read(), "html.parser")
-		create_new_listing(current_page)
+		# request = urllib2.Request(link['href'], headers=request_headers)
+		driver.get(link['href'])
+		time.sleep(5)
+		soup = BeautifulSoup(driver.page_source)
+		
+		# current_page = BeautifulSoup(urllib2.urlopen(request).read(), "html.parser")
+		create_new_listing(soup)
 
+driver.close()
