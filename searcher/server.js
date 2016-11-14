@@ -21,20 +21,25 @@ MongoClient.connect(dbconfig.remoteurl, function (err, database){
 
 
 ///// ROUTES /////
+//get all apartment listings
+app.get('/listings', function(req, res) {
 
-//root path: serve the landing page
-app.get('/', function(req, res) {
-	// res.sendFile(__dirname + '/index.html')
-	res.send("INDEX ROUTE");
-});
+	var query = {};
+	if(req.query.hood){
+		query['neighborhood'] = req.query.hood;
+	}
+	if(req.query.source){
+		query['link'] = { "$regex": req.query.source, "$options": "i" };
+	}
+	
+	console.log(query);
 
-
-//get aggregate player stats
-app.get('/apt_listings', function(req, res) {
-	db.collection('apt_listings').find().toArray(function(err, results) {
+	db.collection('listings').find(query).toArray(function(err, results) {
 		res.send(results);
 	})
 });
+
+
 
 
 

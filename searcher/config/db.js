@@ -1,9 +1,9 @@
 module.exports = {
 
 	// local DB:
-	url : 'mongodb://localhost:27017/aptgrid',
+	url : 'mongodb://admin:craigslistsucks@ds023654.mlab.com:23654/apartmentdb',
 
 	// remote DB:
-	// remoteurl : 'mongodb://[user]:[password]@[mlab_url]/[dbname]'
+	remoteurl : 'mongodb://admin:craigslistsucks@ds023654.mlab.com:23654/apartmentdb'
 
 }
