@@ -141,8 +141,8 @@ for min_rent in range(1000,2000,500):
 			########################################################################
 
 			# create output object
-			
-			
+
+
 			photo_wrapper = content.find("span",{"class":"slider-info"})
 			num_photos = 0
 			if photo_wrapper != None:
@@ -150,19 +150,19 @@ for min_rent in range(1000,2000,500):
 			
 			output = {}
 
-			output['title'] = title
-			output['neighborhood'] = neighborhood
-			output['available_date'] = available_date
-			output['num_beds'] = num_beds
-			output['num_baths'] = num_baths
-			output['square_ft'] = square_ft
-			output['listed_by'] = listed_by
-			output['price'] = price
-			output['latitude'] = latitude
-			output['longitude'] = longitude
-			output['link'] = driver.current_url
-			output['description'] = description
-			output['num_photos'] = num_photos
+			output['title'] = str(title)
+			output['neighborhood'] = str(neighborhood)
+			output['available_date'] = str(available_date)
+			output['num_beds'] = str(num_beds)
+			output['num_baths'] = str(num_baths)
+			output['square_ft'] = str(square_ft)
+			output['listed_by'] = str(listed_by)
+			output['price'] = str(price)
+			output['latitude'] = str(latitude)
+			output['longitude'] = str(longitude)
+			output['link'] = str(driver.current_url)
+			output['description'] = str(description)
+			output['num_photos'] = str(num_photos)
 
 
 

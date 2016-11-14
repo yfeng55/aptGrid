@@ -60,21 +60,21 @@ def create_new_listing(current_page):
 	latitude = str(parsed.group(2)[:len(parsed.group(2))-2].split(',')[0])
 	longitude = str(parsed.group(2)[:len(parsed.group(2))-2].split(',')[1])
 
-	# craigslist has square foot info available but renthop does not.
+	# craigslist has square foot info available but renthop does
 	listing = {}
-	listing['title'] = title
-	listing['neighborhood'] = neighborhood
-	listing['available_date'] = available_date
-	listing['num_beds'] = num_beds
-	listing['num_baths'] = num_baths
-	listing['square_ft'] = 0
-	listing['price'] = price
-	listing['description'] = description
-	listing['num_photos'] = photos_count
-	listing['listed_by'] = contact_name
-	listing['link'] = link['href'].strip()
-	listing['latitude'] = latitude
-	listing['longitude'] = longitude
+	listing['title'] = str(title)
+	listing['neighborhood'] = str(neighborhood)
+	listing['available_date'] = str(available_date)
+	listing['num_beds'] = str(num_beds)
+	listing['num_baths'] = str(num_baths)
+	listing['square_ft'] = str(0,0)
+	listing['price'] = str(price)
+	listing['description'] = str(description)
+	listing['num_photos'] = str(photos_count)
+	listing['listed_by'] = str(contact_name)
+	listing['link'] = str(link['href'].strip())
+	listing['latitude'] = str(latitude)
+	listing['longitude'] = str(longitude)
 	
 
 	print json.dumps(listing)
