@@ -60,6 +60,7 @@ def create_new_listing(current_page):
 	latitude = str(parsed.group(2)[:len(parsed.group(2))-2].split(',')[0])
 	longitude = str(parsed.group(2)[:len(parsed.group(2))-2].split(',')[1])
 
+	# craigslist has square foot info available but renthop does not.
 	listing = {}
 	listing['title'] = title
 	listing['neighborhood'] = neighborhood
@@ -89,7 +90,7 @@ for i in range(0, page_limit):
 		# request = urllib2.Request(link['href'], headers=request_headers)
 		driver.get(link['href'])
 		time.sleep(5)
-		soup = BeautifulSoup(driver.page_source)
+		soup = BeautifulSoup(driver.page_source,"html.parser")
 		
 		# current_page = BeautifulSoup(urllib2.urlopen(request).read(), "html.parser")
 		create_new_listing(soup)
