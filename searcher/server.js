@@ -58,7 +58,7 @@ app.get('/listings', function(req, res) {
 //get neighborhood stats
 app.get('/neighborhoods', function(req, res) {
 
-	db.collection('neighborhoods').find({}}).toArray(function(err, results) {
+	db.collection('neighborhoods').find({}).toArray(function(err, results) {
 		res.send(results);
 	})
 });
