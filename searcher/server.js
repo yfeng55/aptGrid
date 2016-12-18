@@ -39,6 +39,9 @@ app.get('/', function (req, res) {
 //get all apartment listings
 app.get('/listings', function(req, res) {
 
+	console.log("----- NEW REQUEST -----");
+	console.log(req.query);
+
 	var query = {};
 	if(req.query.hood){
 		query['neighborhood'] = req.query.hood;
@@ -46,7 +49,22 @@ app.get('/listings', function(req, res) {
 	if(req.query.source){
 		query['link'] = { "$regex": req.query.source, "$options": "i" };
 	}
-	
+
+
+	if(req.query.numbedrooms){
+		query['num_beds'] = parseInt(req.query.numbedrooms);
+	}
+	if(req.query.numbathrooms){
+		query['num_baths'] = parseInt(req.query.numbathrooms);
+	}
+	if(req.query.pricelow && req.query.pricehigh){
+		var pricelow_str = req.query.pricelow.replace(/\D/g,'');
+		var pricehigh_str = req.query.pricehigh.replace(/\D/g,'');
+		query['price'] = {"$gte": parseInt(pricelow_str), "$lt": parseInt(pricehigh_str)};
+	}
+
+
+	console.log("----- QUERY -----");
 	console.log(query);
 
 	db.collection('listings').find(query).toArray(function(err, results) {

@@ -20,7 +20,7 @@ def main():
     db = utility.get_db()
     listings = []
     for min_rent in range(1000, 2000, 500):
-        for page in range(0, 200, 100):
+        for page in range(0, 2500, 100):
             url = "https://newyork.craigslist.org/search/aap?s=" + str(page) + "&max_price=" + str(
                 min_rent + 500) + "&min_price=" + str(min_rent)
 
@@ -41,11 +41,13 @@ def main():
 
     # get neighborhood names
     for listing in listings:
-        if listing["longitude"] != 0 and listing["latitude"] != 0:
-            print "resolving neighborhood..."
-            neighborhood = utility.find_neighborhood(float(listing["longitude"]), float(listing["latitude"]))
-            listing["neighborhood"] = neighborhood
-
+        try:
+            if listing["longitude"] != 0 and listing["latitude"] != 0:
+                print "resolving neighborhood..."
+                neighborhood = utility.find_neighborhood(float(listing["longitude"]), float(listing["latitude"]))
+                listing["neighborhood"] = neighborhood
+        except:
+            print "could not resolve neighborhood"
     return listings
 
 def create_new_listings(content, driver, inner_driver):

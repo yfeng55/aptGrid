@@ -33,3 +33,12 @@ body { margin:0; padding:0; font-family: "Lato", sans-serif;}
 .searchfield{
 	margin-top: 10px;
 }
+
+
+.mapboxgl-marker{
+	background-color: blue;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}

@@ -27,6 +27,34 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+	//bind an event listener to all search fields
+	$('.searchinput').on("keydown", function(event){
+		if(event.which == 13){
+
+			var neighborhood_input = $(".neighborhood").val();
+			var numbedrooms_input = $(".numbedrooms").val();
+			var numbathrooms_input = $(".numbathrooms").val();
+			var price_high = $(".rightLabel").text();
+			var price_low = $(".leftLabel").text();
+
+			// alert("new search:\n" + neighborhood_input + "\n" + numbedrooms_input + "\n" + numbathrooms_input + "\n" + price_low + "\n" + price_high);
+			
+			var request_url = "/listings?hood=" + neighborhood_input + "&numbedrooms=" + numbedrooms_input + "&numbathrooms=" + numbathrooms_input + "&pricelow=" + price_low + "&pricehigh=" + price_high;
+			// alert(request_url);
+
+			$.get(request_url, function(response){
+				console.log(response);
+
+				for(var i=0; i<response.length; i++){
+					var lat_val = response[i]['latitude'];
+					var lng_val = response[i]['longitude']
+
+					var marker = new mapboxgl.Marker().setLngLat([lng_val, lat_val]).addTo(map);
+					console.log(marker);
+				}
+			}.bind(this));
+		}
+	}.bind(this));
 
 
 

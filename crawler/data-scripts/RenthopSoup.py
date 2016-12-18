@@ -9,8 +9,8 @@ from selenium import webdriver
 request_headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/39.0.2171.95 Safari/537.36'}
-page_limit = 10
-WAIT_TIME = 2
+page_limit = 1
+WAIT_TIME = 1
 
 # Static strings for finding values in the html tags
 
