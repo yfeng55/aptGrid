@@ -5,8 +5,9 @@ import ListingScorer
 
 def main():
     listings = RenthopSoup.main()
-    test_listings = craigslist.main()
-    ListingScorer.main(listings, test_listings)
+    # print(listings)
+    # test_listings = craigslist.main()
+    ListingScorer.main(listings, test_listings=listings)
 
 if __name__ == "__main__":
     main()

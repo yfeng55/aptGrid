@@ -9,8 +9,7 @@ from selenium import webdriver
 request_headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/39.0.2171.95 Safari/537.36'}
-page_limit = 10
-driver = webdriver.Chrome()
+page_limit = 1
 
 # Static strings for finding values in the html tags
 
@@ -49,7 +48,7 @@ def create_new_listing(current_page, link):
             num_beds = 0
         num_baths = int(beds_baths[1].text.strip())
 
-        price = float(current_page.find("div", price_finder).text.replace("$", "").replace(",", ".").strip())
+        price = float(current_page.find("div", price_finder).text.replace("$", "").replace(",", "").strip())
         description = current_page.find("div", description_finder).encode('utf-8').strip()
         # Available date can be either Immediate or MM-DD-YYYY
         available_date = current_page.find("td", available_date_finder).text.strip()
@@ -60,6 +59,8 @@ def create_new_listing(current_page, link):
         longitude = float(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[1])
 
         neighborhood = utility.find_neighborhood(longitude, latitude)
+        if neighborhood is None:
+            raise ValueError()
         # craigslist has square foot info available but renthop does not
         listing = {'title': title, 'neighborhood': neighborhood, 'available_date': available_date,
                    'num_beds': num_beds, 'num_baths': num_baths, 'square_ft': 0, 'price': price,
@@ -78,16 +79,18 @@ def create_new_listing(current_page, link):
 
 def main():
     listings = []
+    driver = webdriver.Chrome()
     for i in range(0, page_limit):
         request = urllib2.Request('https://www.renthop.com/search/nyc?page=' + str(i), headers=request_headers)
         response = urllib2.urlopen(request)
         content = BeautifulSoup(response.read(), "html.parser")
         for link in content.findAll("a", link_finder):
             driver.get(link['href'])
-            time.sleep(5)
+            time.sleep(3)
             soup = BeautifulSoup(driver.page_source, "html.parser")
             listing = create_new_listing(soup, link)
-            listings.append(listing)
+            if listing is not None:
+                listings.append(listing)
 
     driver.close()
     return listings

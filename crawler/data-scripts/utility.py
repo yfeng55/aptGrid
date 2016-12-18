@@ -32,7 +32,7 @@ def print_names():
         # path = mplPath.Path(np.array([list(elem) for elem in x.shape.points]))
         print(x.record[3].lower().replace(" ", "_"))
         if 'New York City' in x.record[2]:
-            for i in range(1, 5):
+            for i in range(0, 5):
                 output = {'name': str(x.record[3].lower().replace(" ", "_")) + '_' + str(i), 'avg_price': 0.0,
                           'count': 0, 'avg_num_bedrooms': 0.0, 'avg_num_bathrooms': 0.0, 'avg_sq_foot': 0.0,
                           'sq_foot_count': 0}

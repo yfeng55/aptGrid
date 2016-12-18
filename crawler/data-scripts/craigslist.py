@@ -6,8 +6,8 @@ import traceback
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
-driver = webdriver.Chrome()
-inner_driver = webdriver.Chrome()
+driver = None
+inner_driver = None
 
 request_headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -15,6 +15,8 @@ request_headers = {
 
 
 def main():
+    driver = webdriver.Chrome()
+    inner_driver = webdriver.Chrome()
     db = utility.get_db()
     listings = []
     for min_rent in range(1000, 2000, 500):
@@ -33,7 +35,6 @@ def main():
     inner_driver.close()
     db.logout()
     return listings
-
 
 def create_new_listings(content):
     for links in content.findAll("a", {"class": "hdrlnk"}):
