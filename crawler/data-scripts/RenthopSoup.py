@@ -9,7 +9,7 @@ from selenium import webdriver
 request_headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/39.0.2171.95 Safari/537.36'}
-page_limit = 20
+page_limit = 10
 driver = webdriver.Chrome()
 
 # Static strings for finding values in the html tags

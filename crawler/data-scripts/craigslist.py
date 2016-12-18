@@ -16,20 +16,23 @@ request_headers = {
 
 def main():
     db = utility.get_db()
+    listings = []
     for min_rent in range(1000, 2000, 500):
-        for page in range(0, 2500, 100):
+        for page in range(0, 200, 100):
             url = "https://newyork.craigslist.org/search/aap?s=" + str(page) + "&max_price=" + str(
                 min_rent + 500) + "&min_price=" + str(min_rent)
             request = urllib2.Request(url, headers=request_headers)
             response = urllib2.urlopen(request)
             content = BeautifulSoup(response.read(), "html.parser")
             output = create_new_listings(content)
+            listings.append(output)
             # print(output, "\n")
             # db.listings.insert(output)
 
     driver.close()
     inner_driver.close()
     db.logout()
+    return listings
 
 
 def create_new_listings(content):
@@ -106,7 +109,3 @@ def create_new_listings(content):
 
         except:
             print("Unexpected error ", traceback.print_exc())
-
-
-# if __name__ == "__main__":
-#     main()
