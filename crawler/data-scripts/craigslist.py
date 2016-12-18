@@ -1,21 +1,10 @@
-import json
 import time
 import urllib2
 import re
 import utility
 import traceback
-import random
 from bs4 import BeautifulSoup
-from pymongo import MongoClient
 from selenium import webdriver
-
-
-def get_db():
-    connection = MongoClient('ds023654.mlab.com', 23654)
-    db = connection['apartmentdb']
-    db.authenticate('admin', 'craigslistsucks')
-    return db
-
 
 driver = webdriver.Chrome()
 inner_driver = webdriver.Chrome()
@@ -26,7 +15,7 @@ request_headers = {
 
 
 def main():
-    db = get_db()
+    db = utility.get_db()
     for min_rent in range(1000, 2000, 500):
         for page in range(0, 2500, 100):
             url = "https://newyork.craigslist.org/search/aap?s=" + str(page) + "&max_price=" + str(
@@ -52,10 +41,7 @@ def create_new_listings(content):
             driver.get(request_url)
             time.sleep(5)
             content = BeautifulSoup(driver.page_source, "html.parser")
-
             title = content.find("span", {"id": "titletextonly"}).text.encode('utf-8').strip()
-            neighborhood = content.find("span", {"class": "postingtitletext"}).find("small"). \
-                text.encode('utf-8').strip()
             available_date = content.find("span", {"class": "property_date"})['data-date']
             price = content.find("span", {"class": "price"}).text
 
@@ -87,7 +73,6 @@ def create_new_listings(content):
 
             lat_long = content.find("a", {"target": "_blank"})
             if lat_long is not None:
-                # print(lat_long['href'])
                 parsed = re.search('(.*)@(.*)z(.*)', lat_long['href'])
                 if parsed is not None:
                     latitude = float(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[0])
@@ -116,7 +101,6 @@ def create_new_listings(content):
                       'longitude': longitude, 'link': driver.current_url, 'description': description,
                       'num_photos': num_photos}
 
-            # print(output)
             time.sleep(1)
             return output
 

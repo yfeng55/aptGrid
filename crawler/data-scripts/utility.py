@@ -18,6 +18,30 @@ def find_neighborhood(latitude, longitude):
     return None
 
 
+def get_db():
+    connection = MongoClient('ds023654.mlab.com', 23654)
+    db = connection['apartmentdb']
+    db.authenticate('admin', 'craigslistsucks')
+
+    return db
+
+
+def print_names():
+    db = get_db()
+    for x in r.shapeRecords():
+        # path = mplPath.Path(np.array([list(elem) for elem in x.shape.points]))
+        print(x.record[3].lower().replace(" ", "_"))
+        if 'New York City' in x.record[2]:
+            for i in range(1, 5):
+                output = {'name': str(x.record[3].lower().replace(" ", "_")) + '_' + str(i), 'avg_price': 0.0,
+                          'count': 0, 'avg_num_bedrooms': 0.0, 'avg_num_bathrooms': 0.0, 'avg_sq_foot': 0.0,
+                          'sq_foot_count': 0}
+                db.neighborhoods.insert(output)
+                # print(output)
+
+
+# print_names()
+
 # def ray_tracing_method(x, y, poly):
 #
 #     n = len(poly)

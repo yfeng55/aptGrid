@@ -4,8 +4,6 @@ import re
 from bs4 import BeautifulSoup
 import traceback
 import utility
-import ListingScorer
-from pymongo import MongoClient
 from selenium import webdriver
 
 request_headers = {
@@ -32,14 +30,6 @@ available_date_finder = {
 lat_long_finder = {"title": "Click to see this area on Google Maps"}
 
 
-def get_db():
-    connection = MongoClient('ds023654.mlab.com', 23654)
-    db = connection['apartmentdb']
-    db.authenticate('admin', 'craigslistsucks')
-
-    return db
-
-
 # Create the new listing from the current page and return its
 def create_new_listing(current_page, link):
     try:
@@ -50,7 +40,6 @@ def create_new_listing(current_page, link):
 
         contact_name = current_page.find("a", contact_name_finder).text.encode('utf-8').strip()
         title = current_page.find("div", title_finder).text.strip()
-        neighborhood = current_page.find("div", neighborhood_finder).text.encode('utf-8').strip()
 
         beds_baths = current_page.findAll("span", beds_baths_finder)
         # STUDIO = 0 num_beds
@@ -88,20 +77,17 @@ def create_new_listing(current_page, link):
 # Get page_limit number of pages from renthop and pass them on to get parsed
 
 def main():
-    db = get_db()
     listings = []
     for i in range(0, page_limit):
         request = urllib2.Request('https://www.renthop.com/search/nyc?page=' + str(i), headers=request_headers)
         response = urllib2.urlopen(request)
         content = BeautifulSoup(response.read(), "html.parser")
         for link in content.findAll("a", link_finder):
-            # request = urllib2.Request(link['href'], headers=request_headers)
             driver.get(link['href'])
             time.sleep(5)
             soup = BeautifulSoup(driver.page_source, "html.parser")
             listing = create_new_listing(soup, link)
             listings.append(listing)
-            # ListingScorer.main(listings)
 
     driver.close()
     return listings
