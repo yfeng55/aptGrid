@@ -2,6 +2,9 @@ import json
 import time
 import urllib2
 import re
+import utility
+import traceback
+import random
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 from selenium import webdriver
@@ -15,6 +18,7 @@ def get_db():
 
 
 driver = webdriver.Chrome()
+inner_driver = webdriver.Chrome()
 
 request_headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -31,95 +35,94 @@ def main():
             response = urllib2.urlopen(request)
             content = BeautifulSoup(response.read(), "html.parser")
             output = create_new_listings(content)
-            db.listings.insert(output)
+            # print(output, "\n")
+            # db.listings.insert(output)
 
     driver.close()
+    inner_driver.close()
     db.logout()
 
 
 def create_new_listings(content):
     for links in content.findAll("a", {"class": "hdrlnk"}):
-        request_url = "https://newyork.craigslist.org" + links['href']
-
-        driver.get(request_url)
-        time.sleep(5)
-        content = BeautifulSoup(driver.page_source, "html.parser")
-
+        # Catch all the exceptions because we do now want to stop execution.
         try:
-            title = content.find("span", {"id": "titletextonly"}).text
-        except AttributeError:
-            title = "None"
+            request_url = "https://newyork.craigslist.org" + links['href']
 
-        try:
-            neighborhood = content.find("span", {"class": "postingtitletext"}).find("small").text
-        except AttributeError:
-            neighborhood = "None"
+            driver.get(request_url)
+            time.sleep(5)
+            content = BeautifulSoup(driver.page_source, "html.parser")
 
-        try:
+            title = content.find("span", {"id": "titletextonly"}).text.encode('utf-8').strip()
+            neighborhood = content.find("span", {"class": "postingtitletext"}).find("small"). \
+                text.encode('utf-8').strip()
             available_date = content.find("span", {"class": "property_date"})['data-date']
-        except AttributeError:
-            available_date = "None"
-
-        try:
             price = content.find("span", {"class": "price"}).text
-        except AttributeError:
-            price = "None"
 
-        num_beds = None
-        num_baths = None
-        square_ft = None
-        listed_by = None
+            # extract attributes from attrgroup
+            num_i = 0
+            for child in content.find("p", {"class": "attrgroup"}).findChildren():
 
-        # extract attributes from attrgroup
-        num_i = 0
-        for child in content.find("p", {"class": "attrgroup"}).findChildren():
-            # print "\nchild " + str(num_i)
-            # print child
+                if num_i == 1:
+                    try:
+                        num_beds = int(child.text)
+                    except ValueError:
+                        num_beds = re.findall(r'\d+', child.text)[0]
+                        # num_beds = [int(s) for s in child.text.split() if s.isdigit()][0]
+                elif num_i == 2:
+                    try:
+                        num_baths = int(child.text)
+                    except ValueError:
+                        num_baths = re.findall(r'\d+', child.text)[0]
+                        # num_baths = [int(s) for s in child.text.split() if s.isdigit()][0]
+                elif num_i == 4:
+                    try:
+                        square_ft = float(child.text)
+                    except ValueError:
+                        square_ft = 0
+                        print('Value error for sq ft in text ', child.text)
+                elif num_i == 7:
+                    listed_by = child.text.encode('utf-8').strip()
+                num_i += 1
 
-            if num_i == 1:
-                num_beds = child.text
-            elif num_i == 2:
-                num_baths = child.text
-            elif num_i == 4:
-                square_ft = child.text
-            elif num_i == 7:
-                listed_by = child.text
-            num_i += 1
-
-        latitude = 0
-        longitude = 0
-        lat_long = content.find("a", {"target": "_blank"})
-        if lat_long is not None:
-            print(lat_long['href'])
-            parsed = re.search('(.*)@(.*)z(.*)', lat_long['href'])
-            if parsed is not None:
-                latitude = str(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[0])
-                longitude = str(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[1])
+            lat_long = content.find("a", {"target": "_blank"})
+            if lat_long is not None:
+                # print(lat_long['href'])
+                parsed = re.search('(.*)@(.*)z(.*)', lat_long['href'])
+                if parsed is not None:
+                    latitude = float(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[0])
+                    longitude = float(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[1])
+                else:
+                    inner_driver.get(lat_long['href'])
+                    time.sleep(5)
+                    new_lat_long = inner_driver.current_url.split('@')[1].split(',')
+                    latitude = float(new_lat_long[0])
+                    longitude = float(new_lat_long[1])
             else:
-                inner_driver = webdriver.Chrome()
-                inner_driver.get(lat_long['href'])
-                time.sleep(5)
-                new_lat_long = inner_driver.current_url.split('@')[1].split(',')
-                latitude = str(new_lat_long[0])
-                longitude = str(new_lat_long[1])
-                inner_driver.close()
+                latitude = 0.0
+                longitude = 0.0
+            description = content.find("section", {"id": "postingbody"}).text.encode('utf-8').strip()
+            photo_wrapper = content.find("span", {"class": "slider-info"})
+            if photo_wrapper is not None:
+                num_photos = int(photo_wrapper.text.strip().split(" ")[3])
+            else:
+                num_photos = 0
 
-        description = content.find("section", {"id": "postingbody"}).text.strip()
-        photo_wrapper = content.find("span", {"class": "slider-info"})
-        num_photos = 0
-        if photo_wrapper is not None:
-            num_photos = photo_wrapper.text.strip().split(" ")[3]
+            neighborhood = utility.find_neighborhood(longitude, latitude)
 
-        output = {'title': str(title), 'neighborhood': str(neighborhood), 'available_date': str(available_date),
-                  'num_beds': str(num_beds), 'num_baths': str(num_baths), 'square_ft': str(square_ft),
-                  'listed_by': str(listed_by), 'price': str(price), 'latitude': str(latitude),
-                  'longitude': str(longitude), 'link': str(driver.current_url), 'description': str(description),
-                  'num_photos': str(num_photos)}
+            output = {'title': title, 'neighborhood': neighborhood, 'available_date': available_date,
+                      'num_beds': num_beds, 'num_baths': num_baths, 'square_ft': square_ft,
+                      'listed_by': listed_by, 'price': price, 'latitude': latitude,
+                      'longitude': longitude, 'link': driver.current_url, 'description': description,
+                      'num_photos': num_photos}
 
-        print json.dumps(output)
-        time.sleep(1)
-        return output
+            # print(output)
+            time.sleep(1)
+            return output
+
+        except:
+            print("Unexpected error ", traceback.print_exc())
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
