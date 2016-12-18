@@ -3,6 +3,8 @@ import urllib2
 import re
 from bs4 import BeautifulSoup
 import traceback
+import utility
+import random
 from pymongo import MongoClient
 from selenium import webdriver
 
@@ -68,6 +70,7 @@ def create_new_listing(current_page, link):
         latitude = float(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[0])
         longitude = float(parsed.group(2)[:len(parsed.group(2)) - 2].split(',')[1])
 
+        neighborhood = utility.find_neighborhood(longitude, latitude)
         # craigslist has square foot info available but renthop does not
         listing = {'title': title, 'neighborhood': neighborhood, 'available_date': available_date,
                    'num_beds': num_beds, 'num_baths': num_baths, 'square_ft': 0, 'price': price,
@@ -96,7 +99,8 @@ def main():
             time.sleep(5)
             soup = BeautifulSoup(driver.page_source, "html.parser")
             listing = create_new_listing(soup, link)
-            db.listings.insert(listing)
+            # print(listing)
+            # db.listings.insert(listing)
 
     driver.close()
 
