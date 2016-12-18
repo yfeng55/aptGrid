@@ -27,7 +27,7 @@ def main():
 	std_deviataion={}
 
 	for listing in listings:
-		key=listing["neighborhood"]+str(listing["num_beds"])
+		key=listing["neighborhood"]+"_"+str(listing["num_beds"])
 		if key in totalPrice:
 			totalPrice[key]+=listing["price"]
 			counts[key]+=1
@@ -42,7 +42,7 @@ def main():
 	print avgPrice
 
 	for listing in listings:
-		key=listing["neighborhood"]+str(listing["num_beds"])
+		key=listing["neighborhood"]+"_"+str(listing["num_beds"])
 		if key in std_numerator:
 			std_numerator[key]+=pow(listing["price"]-avgPrice[key],2)
 		else:
@@ -60,7 +60,7 @@ def main():
 	spamScore={}
 
 	for listing in test_listings:
-		key=listing["neighborhood"]+str(listing["num_beds"])
+		key=listing["neighborhood"]+"_"+str(listing["num_beds"])
 		if std_deviataion[key]==0:
 			zscore[listing["link"]]=0
 		else:
