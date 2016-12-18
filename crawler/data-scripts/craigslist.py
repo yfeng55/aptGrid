@@ -28,7 +28,7 @@ request_headers = {
 def main():
     db = get_db()
     for min_rent in range(1000, 2000, 500):
-        for page in range(0, 2500, 100):
+        for page in range(0, 200, 100):
             url = "https://newyork.craigslist.org/search/aap?s=" + str(page) + "&max_price=" + str(
                 min_rent + 500) + "&min_price=" + str(min_rent)
             request = urllib2.Request(url, headers=request_headers)
