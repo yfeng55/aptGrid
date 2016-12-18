@@ -124,5 +124,5 @@ def create_new_listings(content):
             print("Unexpected error ", traceback.print_exc())
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

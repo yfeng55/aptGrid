@@ -1,6 +1,7 @@
 import shapefile
 import matplotlib.path as mplPath
 import numpy as np
+from pymongo import MongoClient
 
 myshp = open("neigh_data/ZillowNeighborhoods-NY.shp", "rb")
 mydbf = open("neigh_data/ZillowNeighborhoods-NY.dbf", "rb")
@@ -15,6 +16,7 @@ def find_neighborhood(latitude, longitude):
             return x.record[3].lower().replace(" ", "_")
 
     return None
+
 
 # def ray_tracing_method(x, y, poly):
 #

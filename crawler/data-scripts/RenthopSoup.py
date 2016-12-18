@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 import traceback
 import utility
-import random
+import ListingScorer
 from pymongo import MongoClient
 from selenium import webdriver
 
@@ -89,6 +89,7 @@ def create_new_listing(current_page, link):
 
 def main():
     db = get_db()
+    listings = []
     for i in range(0, page_limit):
         request = urllib2.Request('https://www.renthop.com/search/nyc?page=' + str(i), headers=request_headers)
         response = urllib2.urlopen(request)
@@ -99,11 +100,8 @@ def main():
             time.sleep(5)
             soup = BeautifulSoup(driver.page_source, "html.parser")
             listing = create_new_listing(soup, link)
-            # print(listing)
-            # db.listings.insert(listing)
+            listings.append(listing)
+            # ListingScorer.main(listings)
 
     driver.close()
-
-
-if __name__ == "__main__":
-    main()
+    return listings
