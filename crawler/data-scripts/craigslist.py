@@ -26,19 +26,29 @@ def main():
             request = urllib2.Request(url, headers=request_headers)
             response = urllib2.urlopen(request)
             content = BeautifulSoup(response.read(), "html.parser")
-            output = create_new_listings(content)
+            output = create_new_listings(content, driver, inner_driver)
+
             listings.append(output)
-            # print(output, "\n")
+            print(output, "\n")
             # db.listings.insert(output)
 
     driver.close()
     inner_driver.close()
     db.logout()
+
+
+    # get neighborhood names
+    for listing in listings:
+        if listing["longitude"] != 0 and listing["latitude"] != 0:
+            print "resolving neighborhood..."
+            neighborhood = utility.find_neighborhood(float(listing["longitude"]), float(listing["latitude"]))
+            listing["neighborhood"] = neighborhood
+
     return listings
 
-def create_new_listings(content):
+def create_new_listings(content, driver, inner_driver):
     for links in content.findAll("a", {"class": "hdrlnk"}):
-        # Catch all the exceptions because we do now want to stop execution.
+        # Catch all the exceptions because we do not want to stop execution.
         try:
             request_url = "https://newyork.craigslist.org" + links['href']
 

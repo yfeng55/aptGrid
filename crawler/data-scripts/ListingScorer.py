@@ -75,7 +75,7 @@ def main(listings, test_listings):
             std_numerator[key] += pow(listing["price"]-avg_price[key], 2)
         else:
             std_numerator[key] = pow(listing["price"]-avg_price[key], 2)
-        
+
     for key in std_numerator:
         std_deviataion[key] = (std_numerator[key]/counts[key])**0.5
 
@@ -87,11 +87,34 @@ def main(listings, test_listings):
     spam_score = {}
 
     for listing in test_listings:
-        key = listing["neighborhood"]+"_"+str(listing["num_beds"])
-        if std_deviataion[key] == 0:
-            zscore[listing["link"]] = 0
-        else:
-            zscore[listing["link"]] = (listing["price"]-avg_price[key])/std_deviataion[key]
 
-            spam_score[listing["link"]] = getSpamScore(listing, zscore[listing["link"]])
-        # print spamScore[listing["link"]]
+        try:
+            key = listing["neighborhood"]+"_"+str(listing["num_beds"])
+            
+            if key not in std_deviataion.keys():
+                zscore[listing["link"]] = 0
+                listing["zscore"] = 0
+            elif std_deviataion[key] == 0:
+                zscore[listing["link"]] = 0
+                listing["zscore"] = 0
+            else:
+                zscore[listing["link"]] = (listing["price"]-avg_price[key])/std_deviataion[key]
+                spam_score[listing["link"]] = getSpamScore(listing, zscore[listing["link"]])
+
+                listing["zscore"] = (listing["price"]-avg_price[key])/std_deviataion[key]
+                listing["spam_score"] = spam_score[listing["link"]]
+
+
+            print "\ninserting..."
+            print listing
+            db.listings.insert(listing)
+        except:
+            print "\nunable to insert"
+            print listing
+
+
+    for listing in listings:
+        db.listings.insert(listing)
+
+
+

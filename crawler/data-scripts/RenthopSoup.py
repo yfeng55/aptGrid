@@ -10,6 +10,7 @@ request_headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/39.0.2171.95 Safari/537.36'}
 page_limit = 1
+WAIT_TIME = 0
 
 # Static strings for finding values in the html tags
 
@@ -81,12 +82,16 @@ def main():
     listings = []
     driver = webdriver.Chrome()
     for i in range(0, page_limit):
-        request = urllib2.Request('https://www.renthop.com/search/nyc?page=' + str(i), headers=request_headers)
-        response = urllib2.urlopen(request)
-        content = BeautifulSoup(response.read(), "html.parser")
+        # request = urllib2.Request('https://www.renthop.com/search/nyc?page=' + str(i), headers=request_headers)
+        # response = urllib2.urlopen(request)
+        # content = BeautifulSoup(response.read(), "html.parser")
+        driver.get('https://www.renthop.com/search/nyc?page=' + str(i))
+        content = BeautifulSoup(driver.page_source, "html.parser")
+
         for link in content.findAll("a", link_finder):
+
             driver.get(link['href'])
-            time.sleep(3)
+            time.sleep(WAIT_TIME)
             soup = BeautifulSoup(driver.page_source, "html.parser")
             listing = create_new_listing(soup, link)
             if listing is not None:
