@@ -23,9 +23,11 @@ def main():
         for page in range(0, 200, 100):
             url = "https://newyork.craigslist.org/search/aap?s=" + str(page) + "&max_price=" + str(
                 min_rent + 500) + "&min_price=" + str(min_rent)
-            request = urllib2.Request(url, headers=request_headers)
-            response = urllib2.urlopen(request)
-            content = BeautifulSoup(response.read(), "html.parser")
+
+            driver.get(url)
+            # request = urllib2.Request(url, headers=request_headers)
+            # response = urllib2.urlopen(request)
+            content = BeautifulSoup(driver.page_source, "html.parser")
             output = create_new_listings(content, driver, inner_driver)
 
             listings.append(output)
