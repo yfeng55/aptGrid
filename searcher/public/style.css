@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,100,300,500,700,900');
+
+
+
+body { margin:0; padding:0; font-family: "Lato", sans-serif;}
+
+#map { position:absolute; top:0; bottom:0; width:100%; }
+
+
+#searchbox{
+  z-index: 500;
+  background-color: white;
+  padding: 15px;
+  overflow-y: hidden;
+  position: relative;
+  width: 260px;
+  margin: 10px;
+  overflow: visible;
+
+  box-shadow: 0px 2px 5px 2px rgba(119, 119, 119, 0.55);
+  -moz-box-shadow: 0px 2px 5px 2px rgba(119, 119, 119, 0.55);
+  -webkit-box-shadow: 0px 2px 5px 2px rgba(119, 119, 119, 0.55);
+}
+
+
+.searchlabel{
+    display: inline-block;
+    width: 120px;
+    font-weight: 600;
+    color: #555;
+}
+
+.searchfield{
+	margin-top: 10px;
+}
