@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	// create color scale function
 	var colorscale = d3.scale.linear()
 		.domain([-1000, 1000])
-		.range(["red", "blue"]);
+		.range(["blue", "red"]);
 
 	//get neighborhood stats
 	var neighborhood_stats;
